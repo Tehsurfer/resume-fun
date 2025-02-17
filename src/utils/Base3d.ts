@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { Clock, PerspectiveCamera, Scene, WebGLRenderer, AnimationMixer } from 'three'
 import Stats from 'stats.js'
 // 导入控制器，轨道控制器
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { MapControls } from '../utils/MapControls.js'
 // 导入模型解析器
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
@@ -18,7 +18,7 @@ class Base3d {
   public stats
   public clock: Clock
   public renderer: WebGLRenderer
-  public controls: OrbitControls
+  public controls: MapControls
   public mixer: AnimationMixer | null
 
   constructor(selector: string) {
@@ -29,11 +29,11 @@ class Base3d {
     this.stats = new Stats()
     this.clock = new THREE.Clock()
     this.renderer = new THREE.WebGLRenderer({ antialias: true })
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement)
+    this.controls = new MapControls(this.camera, this.renderer.domElement)
     this.mixer = null
     this.font = null
     this.init()
-  }
+  }o
 
   init() {
     this.initStats()
@@ -67,7 +67,7 @@ class Base3d {
   }
 
   initControls() {
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement)
+    this.controls = new MapControls(this.camera, this.renderer.domElement)
     this.controls.target.set(0, 0.5, 0)
     this.controls.update()
     this.controls.enablePan = true
