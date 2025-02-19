@@ -9,6 +9,7 @@ import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'
+import quotes from '../assets/quotes.js'
 
 class Base3d {
   public container: HTMLElement
@@ -24,7 +25,7 @@ class Base3d {
   constructor(selector: string) {
     this.container = document.querySelector(selector) as HTMLElement
     this.camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
-    this.camera.position.set( 0, 200, - 400 );
+    this.camera.position.set( 0, -200, - 300 );
     this.scene = new THREE.Scene()
     this.stats = new Stats()
     this.clock = new THREE.Clock()
@@ -103,7 +104,7 @@ class Base3d {
     loader.load( 'font/helvetiker.typeface.json', (font) =>  {
       
 
-      for ( let i = 0; i < 500; i ++ ) {
+      for ( let i = 0; i < 100; i ++ ) {
 
         const mesh = new THREE.Mesh( geometry, material );
         const posx = Math.random() * 1600 - 800; 
@@ -117,9 +118,9 @@ class Base3d {
         mesh.updateMatrix();
         mesh.matrixAutoUpdate = false;
 
-        if(i%10 === 0) {
+        if(i%5 === 0) {
 
-          const text = new TextGeometry('Keep Looking...', {
+          const text = new TextGeometry(quotes[i].Quote, {
             font: font,
             size: 80,
             curveSegments: 12,
@@ -129,17 +130,20 @@ class Base3d {
             bevelOffset: 0,
             bevelSegments: 5
           })
-          let textMesh = new THREE.Mesh(text, material)
-          textMesh.position.x = posx;
+          let textMesh = new THREE.Mesh(text, textMaterial)
+          let textx = Math.random() * 1600 - 800;
+          let textz = Math.random() * 1600 - 800;
+          textMesh.position.x = textx;
           textMesh.position.y = 0;
-          textMesh.position.z = posz;
-          textMesh.scale.x = .2;
-          textMesh.scale.y = .2;
-          textMesh.scale.z = .2;
+          textMesh.position.z = textz;
+          textMesh.scale.x = .05;
+          textMesh.scale.y = .05;
+          textMesh.scale.z = .05;
           this.scene.add(textMesh)
 
           const light = new THREE.PointLight( 0xff0000, 1, 100 );
-          light.position.set( posx, 3, posz);
+          light.position.set( textx - 1, 3, textz - 1);
+          light.position.set( textx + 1, 3, textz - 1);
           this.scene.add( light );
         }
         this.scene.add( mesh );
