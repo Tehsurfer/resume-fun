@@ -84,12 +84,15 @@ class Base3d {
     this.container.appendChild(this.renderer.domElement)
   }
 
-  animate() {
+  animate(t) {
     window.requestAnimationFrame(this.animate.bind(this))
     const delta = this.clock.getDelta()
     this.mixer?.update(delta)
     this.controls.update()
     this.stats.update()
+    this.scene.traverse((obj) => {
+      if (obj.onBeforeRender) obj.onBeforeRender(this.renderer, this.scene, this.camera)
+    })
     this.renderer.render(this.scene, this.camera)
   }
 
@@ -115,6 +118,7 @@ class Base3d {
         mesh.scale.x = 20;
         mesh.scale.y = Math.random() * 80 + 10;
         mesh.scale.z = 20;
+        mesh.rotateOnWorldAxis(new THREE.Vector3(0,1,0), Math.random()*3)
         mesh.updateMatrix();
         mesh.matrixAutoUpdate = false;
 
@@ -139,6 +143,7 @@ class Base3d {
           textMesh.scale.x = .05;
           textMesh.scale.y = .05;
           textMesh.scale.z = .05;
+          textMesh.rotateOnWorldAxis(new THREE.Vector3(0,1,0), Math.random()*3)
           this.scene.add(textMesh)
 
           const light = new THREE.PointLight( 0xff0000, 1, 100 );
