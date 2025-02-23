@@ -3,6 +3,7 @@ import { Clock, PerspectiveCamera, Scene, WebGLRenderer, AnimationMixer } from '
 import Stats from 'stats.js'
 // 导入控制器，轨道控制器
 import { MapControls } from '../utils/MapControls.js'
+import {QuoteProcessing} from './quoteProcessing.js'
 // 导入模型解析器
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
@@ -122,6 +123,8 @@ class Base3d {
         mesh.updateMatrix();
         mesh.matrixAutoUpdate = false;
 
+        const ambLight = new THREE.AmbientLight('0x8f1856', 0.001)
+        this.scene.add(ambLight)
         if(i%5 === 0) {
 
           const text = new TextGeometry(quotes[i].Quote, {
@@ -147,8 +150,10 @@ class Base3d {
           this.scene.add(textMesh)
 
           const light = new THREE.PointLight( 0xff0000, 1, 100 );
-          light.position.set( textx - 1, 3, textz - 1);
-          light.position.set( textx + 1, 3, textz - 1);
+          light.position.set( textx - 10, 4, textz - 10);
+          light.position.set( textx + 10, 4, textz - 10);
+          light.position.set( textx + 20, 6, textz + 20);
+          light.position.set( textx - 20, 6, textz - 20);
           this.scene.add( light );
         }
         this.scene.add( mesh );
