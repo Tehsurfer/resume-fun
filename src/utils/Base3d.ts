@@ -17,11 +17,13 @@ class Base3d {
   public camera: PerspectiveCamera
   public scene: Scene
   public font: any
+  public qouteProcessor: QuoteProcessing
   public stats
   public clock: Clock
   public renderer: WebGLRenderer
   public controls: MapControls
   public mixer: AnimationMixer | null
+  public textMeshList: any
 
   constructor(selector: string) {
     this.container = document.querySelector(selector) as HTMLElement
@@ -32,6 +34,8 @@ class Base3d {
     this.clock = new THREE.Clock()
     this.renderer = new THREE.WebGLRenderer({ antialias: true })
     this.controls = new MapControls(this.camera, this.renderer.domElement)
+    this.qouteProcessor = new QuoteProcessing(quotes)
+    this.textMeshList = []
     this.mixer = null
     this.font = null
     this.init()
@@ -51,6 +55,8 @@ class Base3d {
     this.creatWorld()
     // 监听场景大小改变，调整渲染尺寸
     window.addEventListener('resize', this.onWindowResize.bind(this))
+
+    setTimeout( ()=>this.updateTextMeshPositions(), 2500)
   }
 
   initStats() {
@@ -61,6 +67,8 @@ class Base3d {
     const pmremGenerator = new THREE.PMREMGenerator(this.renderer)
     this.scene.background = new THREE.Color( 0xcccccc );
 	  this.scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
+    const ambLight = new THREE.AmbientLight(0x8f1856, 0.001)
+    this.scene.add(ambLight)
 
   }
 
@@ -104,6 +112,8 @@ class Base3d {
     const textMaterial = new THREE.MeshPhongMaterial( { color: 0x8f1856, flatShading: false } );
     var loader = new FontLoader();
 
+    let vQuotes = this.qouteProcessor.stackQuotesVertically()
+
 
     loader.load( 'font/helvetiker.typeface.json', (font) =>  {
       
@@ -123,23 +133,21 @@ class Base3d {
         mesh.updateMatrix();
         mesh.matrixAutoUpdate = false;
 
-        const ambLight = new THREE.AmbientLight('0x8f1856', 0.001)
-        this.scene.add(ambLight)
         if(i%5 === 0) {
-
-          const text = new TextGeometry(quotes[i].Quote, {
+          const text = new TextGeometry(vQuotes[i].Quote, {
             font: font,
             size: 80,
             curveSegments: 12,
             bevelEnabled: true,
-            bevelThickness: 10,
-            bevelSize: 8,
+            bevelThickness: 5,
+            bevelSize: 4,
             bevelOffset: 0,
             bevelSegments: 5
           })
           let textMesh = new THREE.Mesh(text, textMaterial)
           let textx = Math.random() * 1600 - 800;
           let textz = Math.random() * 1600 - 800;
+          console.log(textMesh, "textMesh")
           textMesh.position.x = textx;
           textMesh.position.y = 0;
           textMesh.position.z = textz;
@@ -148,6 +156,8 @@ class Base3d {
           textMesh.scale.z = .05;
           textMesh.rotateOnWorldAxis(new THREE.Vector3(0,1,0), Math.random()*3)
           this.scene.add(textMesh)
+          this.textMeshList.push(textMesh)
+          window.textMesh = textMesh
 
           const light = new THREE.PointLight( 0xff0000, 1, 100 );
           light.position.set( textx - 10, 4, textz - 10);
@@ -162,6 +172,13 @@ class Base3d {
     })
 
     this.animate()
+  }
+
+  updateTextMeshPositions() {
+    this.textMeshList.forEach(mesh => {
+      let yheight = mesh.geometry.boundingSphere.radius /10
+      mesh.position.y = yheight
+    });
   }
 
   onWindowResize() {
