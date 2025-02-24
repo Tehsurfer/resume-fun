@@ -52,7 +52,7 @@ class Base3d {
     // 控制器
     this.initControls()
     // 添加物体
-    this.creatWorld()
+    this.createWorld()
     // 监听场景大小改变，调整渲染尺寸
     window.addEventListener('resize', this.onWindowResize.bind(this))
 
@@ -105,7 +105,7 @@ class Base3d {
     this.renderer.render(this.scene, this.camera)
   }
 
-  creatWorld() {
+  createWorld() {
     const geometry = new THREE.BoxGeometry();
     geometry.translate( 0, 0.5, 0 );
     const material = new THREE.MeshPhongMaterial( { color: 0xeeeeee, flatShading: true } );
