@@ -107,8 +107,10 @@ class Base3d {
 
   createWorld() {
     const geometry = new THREE.BoxGeometry();
+    const sphere = new THREE.SphereGeometry();
     geometry.translate( 0, 0.5, 0 );
     const material = new THREE.MeshPhongMaterial( { color: 0xeeeeee, flatShading: true } );
+    const doorMaterial = new THREE.MeshPhongMaterial( { color: 0x5e4e3e, flatShading: false } ); 
     const textMaterial = new THREE.MeshPhongMaterial( { color: 0x8f1856, flatShading: false } );
     var loader = new FontLoader();
 
@@ -117,7 +119,7 @@ class Base3d {
 
     loader.load( 'font/helvetiker.typeface.json', (font) =>  {
       
-
+      // Tower blocks
       for ( let i = 0; i < 100; i ++ ) {
 
         const mesh = new THREE.Mesh( geometry, material );
@@ -135,6 +137,53 @@ class Base3d {
         this.scene.add( mesh );
 
       }
+
+      // Doors
+      for ( let i = 0; i < 7; i ++ ) {
+
+        // Door and frame
+        const mesh = new THREE.Mesh( geometry, doorMaterial);
+        const posx = Math.random() * 1600 - 800; 
+        const posz = Math.random() * 1600 - 800;
+        mesh.position.x = posx;
+        mesh.position.y = 0;
+        mesh.position.z = posz;
+        mesh.scale.x = 0.5;
+        mesh.scale.y = 30;
+        mesh.scale.z = 15;
+        mesh.updateMatrix();
+        mesh.matrixAutoUpdate = false;
+        this.scene.add( mesh );
+
+        // handle
+        const handleMesh = new THREE.Mesh( sphere, doorMaterial);
+        handleMesh.position.x = posx - 1.5;
+        handleMesh.position.y = 12;
+        handleMesh.position.z = posz - 5;
+        handleMesh.scale.x = 1;
+        handleMesh.scale.y = 1;
+        handleMesh.scale.z = 1;
+        handleMesh.updateMatrix();
+        handleMesh.matrixAutoUpdate = false;
+
+        // Add a handle on the other side
+        const handleMesh2 = new THREE.Mesh( sphere, doorMaterial);
+        handleMesh2.position.x = posx + 1.5;
+        handleMesh2.position.y = 12;
+        handleMesh2.position.z = posz - 5;
+        handleMesh2.scale.x = 1;
+        handleMesh2.scale.y = 1;
+        handleMesh2.scale.z = 1;
+        handleMesh2.updateMatrix();
+        handleMesh2.matrixAutoUpdate = false;
+        this.scene.add( handleMesh, handleMesh2 );
+
+
+
+      }
+
+
+      // 3d Quote stacks
       for (let i=0; i<= vQuotes.length/100; i++){
         const randomQoute = Math.floor(Math.random()*vQuotes.length)
         const text = new TextGeometry(vQuotes[randomQoute].Quote, {
