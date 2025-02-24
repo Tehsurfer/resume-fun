@@ -132,47 +132,47 @@ class Base3d {
         mesh.rotateOnWorldAxis(new THREE.Vector3(0,1,0), Math.random()*3)
         mesh.updateMatrix();
         mesh.matrixAutoUpdate = false;
-
-        if(i%5 === 0) {
-          const text = new TextGeometry(vQuotes[i].Quote, {
-            font: font,
-            size: 80,
-            curveSegments: 12,
-            bevelEnabled: true,
-            bevelThickness: 5,
-            bevelSize: 4,
-            bevelOffset: 0,
-            bevelSegments: 5
-          })
-          let textMesh = new THREE.Mesh(text, textMaterial)
-          let textx = Math.random() * 1600 - 800;
-          let textz = Math.random() * 1600 - 800;
-          console.log(textMesh, "textMesh")
-          textMesh.position.x = textx;
-          textMesh.position.y = 0;
-          textMesh.position.z = textz;
-          textMesh.scale.x = .05;
-          textMesh.scale.y = .05;
-          textMesh.scale.z = .05;
-          textMesh.rotateOnWorldAxis(new THREE.Vector3(0,1,0), Math.random()*3)
-          this.scene.add(textMesh)
-          this.textMeshList.push(textMesh)
-          window.textMesh = textMesh
-
-          const light = new THREE.PointLight( 0xff0000, 1, 100 );
-          light.position.set( textx - 10, 4, textz - 10);
-          light.position.set( textx + 10, 4, textz - 10);
-          light.position.set( textx + 20, 6, textz + 20);
-          light.position.set( textx - 20, 6, textz - 20);
-          this.scene.add( light );
-        }
         this.scene.add( mesh );
 
+      }
+      for (let i=0; i<= vQuotes.length/100; i++){
+        const randomQoute = Math.floor(Math.random()*vQuotes.length)
+        const text = new TextGeometry(vQuotes[randomQoute].Quote, {
+          font: font,
+          size: 80,
+          curveSegments: 12,
+          bevelEnabled: true,
+          bevelThickness: 5,
+          bevelSize: 4,
+          bevelOffset: 0,
+          bevelSegments: 5
+        })
+        let textMesh = new THREE.Mesh(text, textMaterial)
+        let textx = Math.random() * 1600 - 800;
+        let textz = Math.random() * 1600 - 800;
+        textMesh.position.x = textx;
+        textMesh.position.y = 0;
+        textMesh.position.z = textz;
+        textMesh.scale.x = .05;
+        textMesh.scale.y = .05;
+        textMesh.scale.z = .05;
+        textMesh.rotateOnWorldAxis(new THREE.Vector3(0,1,0), Math.random()*3)
+        this.scene.add(textMesh)
+        this.textMeshList.push(textMesh)
+
+        const light = new THREE.PointLight( 0xff0000, 1, 100 );
+        light.position.set( textx - 10, 4, textz - 10);
+        light.position.set( textx + 10, 4, textz - 10);
+        light.position.set( textx + 20, 6, textz + 20);
+        light.position.set( textx - 20, 6, textz - 20);
+        this.scene.add( light );
       }
     })
 
     this.animate()
   }
+
+  
 
   updateTextMeshPositions() {
     this.textMeshList.forEach(mesh => {
