@@ -105,12 +105,69 @@ class Base3d {
     this.renderer.render(this.scene, this.camera)
   }
 
-  createWorld() {
+  createTower() {
     const geometry = new THREE.BoxGeometry();
-    const sphere = new THREE.SphereGeometry();
     geometry.translate( 0, 0.5, 0 );
     const material = new THREE.MeshPhongMaterial( { color: 0xeeeeee, flatShading: true } );
+    const mesh = new THREE.Mesh( geometry, material );
+    const posx = Math.random() * 1600 - 800; 
+    const posz = Math.random() * 1600 - 800;
+    mesh.position.x = posx;
+    mesh.position.y = 0;
+    mesh.position.z = posz;
+    mesh.scale.x = 20;
+    mesh.scale.y = Math.random() * 80 + 10;
+    mesh.scale.z = 20;
+    mesh.rotateOnWorldAxis(new THREE.Vector3(0,1,0), Math.random()*3)
+    mesh.updateMatrix();
+    mesh.matrixAutoUpdate = false;
+    this.scene.add( mesh );
+  }
+
+  createDoor() {
+    const geometry = new THREE.BoxGeometry();
+    const sphere = new THREE.SphereGeometry();
     const doorMaterial = new THREE.MeshPhongMaterial( { color: 0x5e4e3e, flatShading: false } ); 
+
+    // Door and frame
+    const mesh = new THREE.Mesh( geometry, doorMaterial);
+    const posx = Math.random() * 1600 - 800; 
+    const posz = Math.random() * 1600 - 800;
+    mesh.position.x = posx;
+    mesh.position.y = 0;
+    mesh.position.z = posz;
+    mesh.scale.x = 0.5;
+    mesh.scale.y = 30;
+    mesh.scale.z = 15;
+    mesh.updateMatrix();
+    mesh.matrixAutoUpdate = false;
+    this.scene.add( mesh );
+
+    // handle
+    const handleMesh = new THREE.Mesh( sphere, doorMaterial);
+    handleMesh.position.x = posx - 1.5;
+    handleMesh.position.y = 12;
+    handleMesh.position.z = posz - 5;
+    handleMesh.scale.x = 1;
+    handleMesh.scale.y = 1;
+    handleMesh.scale.z = 1;
+    handleMesh.updateMatrix();
+    handleMesh.matrixAutoUpdate = false;
+
+    // Add a handle on the other side
+    const handleMesh2 = new THREE.Mesh( sphere, doorMaterial);
+    handleMesh2.position.x = posx + 1.5;
+    handleMesh2.position.y = 12;
+    handleMesh2.position.z = posz - 5;
+    handleMesh2.scale.x = 1;
+    handleMesh2.scale.y = 1;
+    handleMesh2.scale.z = 1;
+    handleMesh2.updateMatrix();
+    handleMesh2.matrixAutoUpdate = false;
+    this.scene.add( handleMesh, handleMesh2 );
+  }
+
+  createWorld() {
     const textMaterial = new THREE.MeshPhongMaterial( { color: 0x8f1856, flatShading: false } );
     var loader = new FontLoader();
 
@@ -121,65 +178,12 @@ class Base3d {
       
       // Tower blocks
       for ( let i = 0; i < 100; i ++ ) {
-
-        const mesh = new THREE.Mesh( geometry, material );
-        const posx = Math.random() * 1600 - 800; 
-        const posz = Math.random() * 1600 - 800;
-        mesh.position.x = posx;
-        mesh.position.y = 0;
-        mesh.position.z = posz;
-        mesh.scale.x = 20;
-        mesh.scale.y = Math.random() * 80 + 10;
-        mesh.scale.z = 20;
-        mesh.rotateOnWorldAxis(new THREE.Vector3(0,1,0), Math.random()*3)
-        mesh.updateMatrix();
-        mesh.matrixAutoUpdate = false;
-        this.scene.add( mesh );
-
+        this.createTower()
       }
 
       // Doors
       for ( let i = 0; i < 7; i ++ ) {
-
-        // Door and frame
-        const mesh = new THREE.Mesh( geometry, doorMaterial);
-        const posx = Math.random() * 1600 - 800; 
-        const posz = Math.random() * 1600 - 800;
-        mesh.position.x = posx;
-        mesh.position.y = 0;
-        mesh.position.z = posz;
-        mesh.scale.x = 0.5;
-        mesh.scale.y = 30;
-        mesh.scale.z = 15;
-        mesh.updateMatrix();
-        mesh.matrixAutoUpdate = false;
-        this.scene.add( mesh );
-
-        // handle
-        const handleMesh = new THREE.Mesh( sphere, doorMaterial);
-        handleMesh.position.x = posx - 1.5;
-        handleMesh.position.y = 12;
-        handleMesh.position.z = posz - 5;
-        handleMesh.scale.x = 1;
-        handleMesh.scale.y = 1;
-        handleMesh.scale.z = 1;
-        handleMesh.updateMatrix();
-        handleMesh.matrixAutoUpdate = false;
-
-        // Add a handle on the other side
-        const handleMesh2 = new THREE.Mesh( sphere, doorMaterial);
-        handleMesh2.position.x = posx + 1.5;
-        handleMesh2.position.y = 12;
-        handleMesh2.position.z = posz - 5;
-        handleMesh2.scale.x = 1;
-        handleMesh2.scale.y = 1;
-        handleMesh2.scale.z = 1;
-        handleMesh2.updateMatrix();
-        handleMesh2.matrixAutoUpdate = false;
-        this.scene.add( handleMesh, handleMesh2 );
-
-
-
+        this.createDoor()
       }
 
 
